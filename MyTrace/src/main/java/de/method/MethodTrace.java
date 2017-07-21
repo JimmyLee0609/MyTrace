@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sun.jdi.Bootstrap;
 import com.sun.jdi.Location;
 import com.sun.jdi.Method;
@@ -38,6 +41,7 @@ import com.sun.jdi.request.ThreadDeathRequest;
 import com.sun.jdi.request.ThreadStartRequest;
 
 public class MethodTrace {
+	private static final Logger logger=LoggerFactory.getLogger("MethodTrace");
 	private VirtualMachine vm;
     private Process process;
     private EventRequestManager eventRequestManager;
@@ -59,6 +63,12 @@ public class MethodTrace {
     		+"D:\\oxygenEclipse\\BTrace\\Debugger\\target\\classes;"
     		+"D:\\jdk\\x64\\jre\\lib\\tools.jar;"+""
     		;
+    
+    /*private String className = "myana.UmlView";
+    private static final String classPath = "-cp "
+    		+ "C:\\Users\\cobbl\\git\\MyTrace\\MyTrace\\target\\classes;"
+    		+"D:\\jdk\\x64\\jre\\lib\\tools.jar;"+"";
+    */
     public static void main(String[] args) throws Exception {
     	
     	MethodTrace trace = new MethodTrace();
@@ -232,31 +242,37 @@ public class MethodTrace {
     private void execute(Event event) throws Exception {
         if (event instanceof VMStartEvent) {
 //          虚拟机启动事件
-        	System.out.println("VM started");
+//        	System.out.println("VM started");
+        	logger.info("VM started");
         } else if (event instanceof MethodEntryEvent) {
 //           方法进入事件
         	Method method = ((MethodEntryEvent) event).method();
         	String thread = ((MethodEntryEvent) event).thread().name();
-            System.out.printf("Enter -> Method: %s, Signature:%s, ThreadName: %s\n",method.name(),method.signature(),thread);
-            System.out.printf("\t ReturnType:%s\n", method.returnTypeName());
+//            System.out.printf("Enter -> Method: %s, Signature:%s, ThreadName: %s\n",method.name(),method.signature(),thread);
+//            System.out.printf("\t ReturnType:%s\n", method.returnTypeName());
+            logger.info("Enter ->Method --->:"+method.name()+ "---"+method.signature()+ "@"+thread+"\n");
         } else if (event instanceof MethodExitEvent) {
 //            方法退出事件
         	Method method = ((MethodExitEvent) event).method();
         	String threadName = ((MethodExitEvent) event).thread().name();
-        	
-            System.out.printf("Exit -> method: %s\n",method.name()+"...threadName: "+threadName);
-            
+        	String signature = method.signature();
+//            System.out.printf("Exit -> method: %s\n",method.name()+"...threadName: "+threadName);
+            logger.info("Exit ->Method --->:"+method.name()+ "---"+signature+" @"+threadName+"\n");
         } else if (event instanceof VMDisconnectEvent) {
         	vmExit = true;
-        	System.out.println("虚拟机断开");
+//        	System.out.println("虚拟机断开");
+        	logger.info("虚拟机断开");
         }else if(event instanceof ThreadStartEvent) {
         	ThreadReference thread = ((ThreadStartEvent)event).thread();
-        	System.out.println("线程开启"+thread.uniqueID());
+//        	System.out.println("线程开启"+thread.uniqueID());
+        	logger.info("线程"+thread.name()+"----"+thread.uniqueID()+"开启");
         }else if(event instanceof ThreadDeathEvent) {
         	ThreadReference thread = ((ThreadDeathEvent)event).thread();
-        	System.out.println("线程死亡"+thread.uniqueID());
+//        	System.out.println("线程死亡"+thread.uniqueID());
+        	logger.info("线程"+thread.name()+"----"+thread.uniqueID()+"走完");
         }else if (event instanceof VMDeathEvent) {
 			System.out.println("虚拟机死亡");
+			logger.info("虚拟机退出");
 		}else if(event instanceof ExceptionEvent) {
 //			异常断点
 			Location location = ((ExceptionEvent)event).catchLocation();
@@ -268,10 +284,12 @@ public class MethodTrace {
 			String className = type.name();
 			ThreadReference thread = ((ClassPrepareEvent) event).thread();
 			String threadName = thread.name();
-			System.out.println("--ClassPrepare: "+className+" --thread: "+threadName);
+//			System.out.println("--ClassPrepare: "+className+" --thread: "+threadName);
+			logger.info("--ClassPrepare: "+className+" @"+threadName);
 		}else if(event instanceof ClassUnloadEvent) {
 			String name = ((ClassUnloadEvent)event).className();
-			System.out.println("--ClassUnload: "+name);
+//			System.out.println("--ClassUnload: "+name);
+			logger.info("--ClassUnload: "+name);
 		}
     }
 }
