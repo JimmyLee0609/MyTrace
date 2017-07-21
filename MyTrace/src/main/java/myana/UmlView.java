@@ -7,7 +7,10 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LightweightSystem;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.Panel;
+import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
@@ -28,6 +31,7 @@ public class UmlView {
 	private IFigure contents;
 	private Canvas canvas2;
 	LightweightSystem system;
+	private String path="D:\\oxygenEclipse\\BTrace\\Genealogy\\bin\\com\\scr";
 	
 	public UmlView() {
 	}
@@ -86,12 +90,14 @@ public class UmlView {
 	private void addAllClass() {
 		Context context = new Context();
 		
-		context.analyse("C:/Users/cobbl/Desktop/帮助文件/书籍/Eclipse/org.eclipse.draw2d.examples");
+		context.analyse(path);
 		List<ClassDetail> detail = context.getClassDetail();
+		ToolbarLayout layout = new ToolbarLayout();
 		for (ClassDetail classDetail : detail) {
 			String className = classDetail.getClassName();
 			if(!className.contains("$")){
 				myUmlFigure figure = new myUmlFigure();
+				figure.setFont(contents.getFont());
 				figure.setClassName(className);
 				List<CtField> attributes = classDetail.getAttributes();
 				for (CtField ctField : attributes) {
@@ -118,23 +124,30 @@ public class UmlView {
 		gridLayout = new GridLayout();
 		layoutData = new GridData(GridData.FILL_BOTH);
 		shell.setLayout(gridLayout);
-
+		shell.setFont(new Font(display,new FontData()));
 		
 		// 新建 画布 组件
-		canvas2 = new Canvas(shell, SWT.DOUBLE_BUFFERED);
-
+		canvas2 = new Canvas(shell,SWT.NONE);
+		canvas2.setFont(shell.getFont());
 		// 为画布和父类组件设置布局管理器
 		canvas2.setLayoutData(layoutData);
 		canvas2.setLayout(gridLayout);
 		
 		
-//		LightweightSystem system2 = new LightweightSystem(canvas2);
 		
+		LightweightSystem system2 = new LightweightSystem(canvas2);
 		
 		
 		canvas = new FigureCanvas(canvas2, SWT.V_SCROLL);
+		canvas.setFont(canvas2.getFont());
 		
-		canvas.setContents(getContents());
+		
+		IFigure root = getContents();
+//		总是需要给子类设置字体，以便label计算prefereed size
+		root.setFont(canvas.getFont());
+		
+//		canvas.getLightweightSystem().setContents(root);
+		canvas.setContents(root);
 		
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
 		canvas.setLayout(gridLayout);

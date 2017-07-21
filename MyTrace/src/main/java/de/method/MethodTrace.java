@@ -64,9 +64,17 @@ public class MethodTrace {
     		+"D:\\jdk\\x64\\jre\\lib\\tools.jar;"+""
     		;*/
     
-    private String className = "myana.UmlView";
+    /*private String className = "myana.UmlView";
     private static final String classPath = "-cp "
     		+ "C:\\Users\\cobbl\\git\\MyTrace\\MyTrace\\target\\classes;"
+    		+ "C:\\Users\\cobbl\\git\\MyTrace\\MyTrace\\lib\\javassist.jar;"
+    		+ "C:\\Users\\cobbl\\git\\MyTrace\\MyTrace\\lib\\org.eclipse.draw2d_3.6.0.v20100525-1225.jar;"
+    		+ "C:\\Users\\cobbl\\git\\MyTrace\\MyTrace\\lib\\org.eclipse.swt.win32.win32.x86_64_3.105.3.v20170228-0512.jar;"
+    		+"D:\\jdk\\x64\\jre\\lib\\tools.jar;"+""
+    		;*/
+	private String className = "com.qualityeclipse.genealogy.view.GenealogyView";
+    private static final String classPath = "-cp "
+    		+ "D:\\oxygenEclipse\\BTrace\\Genealogy\\bin;"
     		+ "C:\\Users\\cobbl\\git\\MyTrace\\MyTrace\\lib\\javassist.jar;"
     		+ "C:\\Users\\cobbl\\git\\MyTrace\\MyTrace\\lib\\org.eclipse.draw2d_3.6.0.v20100525-1225.jar;"
     		+ "C:\\Users\\cobbl\\git\\MyTrace\\MyTrace\\lib\\org.eclipse.swt.win32.win32.x86_64_3.105.3.v20170228-0512.jar;"
@@ -260,9 +268,11 @@ public class MethodTrace {
 //           方法进入事件
         	Method method = ((MethodEntryEvent) event).method();
         	String thread = ((MethodEntryEvent) event).thread().name();
-//            System.out.printf("Enter -> Method: %s, Signature:%s, ThreadName: %s\n",method.name(),method.signature(),thread);
-//            System.out.printf("\t ReturnType:%s\n", method.returnTypeName());
+        	ReferenceType type = method.declaringType();
+//        	System.out.printf("Enter -> Method: %s, Signature:%s, ThreadName: %s\n",method.name(),method.signature(),thread);
+//        	System.out.printf("\t ReturnType:%s\n", method.returnTypeName());
             logger.info("Enter ->Method --->:"+method.name()+ "---"+method.signature()+ "@"+thread+"\n");
+            logger.info("Enter ->Methodref --->:"+type.name());
         } else if (event instanceof MethodExitEvent) {
 //            方法退出事件
         	Method method = ((MethodExitEvent) event).method();

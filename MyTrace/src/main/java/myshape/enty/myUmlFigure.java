@@ -62,11 +62,14 @@ public class myUmlFigure extends Panel {
 		separatorBorder= new SeparatorBorder();
 //		新建组件的头部，设置布局和边框
 		header = new UMLFigureShape();
+		header.setFont(getFont());
 		header.setLayoutManager(layout);
 		header.setBorder(new MarginBorder(3, 5, 3, 5));
 //		新建字段组件，和方法组件，设置布局和边框
 		fields = new UMLFigureShape();
 		methods = new UMLFigureShape();
+		fields.setFont(getFont());
+		methods.setFont(getFont());
 		GridData data = new GridData();
 		GridLayout gridLayout = new GridLayout(1,false);
 		GridLayout gridLayout2 = new GridLayout(1,false);
@@ -74,7 +77,7 @@ public class myUmlFigure extends Panel {
 		methods.setBorder(separatorBorder);
 		fields.setLayoutManager(gridLayout);
 		methods.setLayoutManager(gridLayout2);
-//		layout.setStretchMinorAxis(false);
+		layout.setStretchMinorAxis(false);
 
 //		设置本组件的整体布局和边框，添加个组件，设置背景颜色。
 		setBorder(lineBorder);
@@ -85,8 +88,9 @@ public class myUmlFigure extends Panel {
 		setBackgroundColor(color);
 		setRequestFocusEnabled(true);
 		header.addMouseListener(getHindMouseListener());
-		fields.setVisible(false);
-		methods.setVisible(false);
+		/*fields.setVisible(false);
+		methods.setVisible(false);*/
+//		fields.setOpaque(false);
 	}
 
 	private MouseListener getHindMouseListener() {
@@ -131,6 +135,7 @@ public class myUmlFigure extends Panel {
 	protected void showDetail() {
 		fields.setVisible(true);
 		methods.setVisible(true);
+		fields.setOpaque(true);
 		layout();
 		repaint();
 		flag=false;

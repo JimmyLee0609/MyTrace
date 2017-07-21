@@ -18,7 +18,7 @@ public class UMLFigureShape extends Panel {
 	@Override
 	public Dimension getPreferredSize(int wHint, int hHint) {
 //		布局管理器 在调用  layout时 调用，本例为隐藏，显示控件用
-		if(isVisible()){
+		/*if(isVisible()){
 			if (getLayoutManager() != null) {
 				Dimension d = getLayoutManager().getPreferredSize(this, wHint,
 						hHint);
@@ -26,7 +26,8 @@ public class UMLFigureShape extends Panel {
 					return d;
 			}
 		}
-		 return new Dimension(0,0);
+		 return new Dimension(0,0);*/
+		return super.getPreferredSize( wHint,  hHint);
 	}
 
 	@Override
