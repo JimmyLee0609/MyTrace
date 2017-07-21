@@ -87,7 +87,7 @@ public class myUmlFigure extends Panel {
 		add(methods);
 		setBackgroundColor(color);
 		setRequestFocusEnabled(true);
-		header.addMouseListener(getHindMouseListener());
+//		header.addMouseListener(getHindMouseListener());
 		/*fields.setVisible(false);
 		methods.setVisible(false);*/
 //		fields.setOpaque(false);
