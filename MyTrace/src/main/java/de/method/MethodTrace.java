@@ -58,17 +58,21 @@ public class MethodTrace {
 	private List<String> methodEntryExclusions;
 	private List<String> methodEntryFilters;
 	
-	private String className = "test.copy.HelloWorld";
+	/*private String className = "test.copy.HelloWorld";
     private static final String classPath = "-cp "
     		+"D:\\oxygenEclipse\\BTrace\\Debugger\\target\\classes;"
     		+"D:\\jdk\\x64\\jre\\lib\\tools.jar;"+""
-    		;
+    		;*/
     
-    /*private String className = "myana.UmlView";
+    private String className = "myana.UmlView";
     private static final String classPath = "-cp "
     		+ "C:\\Users\\cobbl\\git\\MyTrace\\MyTrace\\target\\classes;"
-    		+"D:\\jdk\\x64\\jre\\lib\\tools.jar;"+"";
-    */
+    		+ "C:\\Users\\cobbl\\git\\MyTrace\\MyTrace\\lib\\javassist.jar;"
+    		+ "C:\\Users\\cobbl\\git\\MyTrace\\MyTrace\\lib\\org.eclipse.draw2d_3.6.0.v20100525-1225.jar;"
+    		+ "C:\\Users\\cobbl\\git\\MyTrace\\MyTrace\\lib\\org.eclipse.swt.win32.win32.x86_64_3.105.3.v20170228-0512.jar;"
+    		+"D:\\jdk\\x64\\jre\\lib\\tools.jar;"+""
+    		;
+    
     public static void main(String[] args) throws Exception {
     	
     	MethodTrace trace = new MethodTrace();
@@ -85,27 +89,35 @@ public class MethodTrace {
         trace.destroyDebuggeeVM();
 
     }
-
+/*
+ * 添加过滤条件
+ * */
     private void getFilter() {
+    	
+    	
     	ArrayList<String> list = new ArrayList<String>();
-//    	类的过滤
+//    	添加类的过滤
 //    	list.add("");
     	 classUnloadExclusions=new ArrayList<String>(list);
     	 classPrepareExclusions=classUnloadExclusions;
     	 list.clear();
     	 
+    	
 //    	 list.add("");
     	 classUnloadFilters=new ArrayList<String>(list);
     	 classPrepareFilters=classUnloadFilters;
     	 list.clear();
     	 
-//    	 方法的过滤
-//    	 list.add("");
+//    	添加排除
+    	 list.add("com.sun.*");
+    	 list.add("sun.*");
+    	 list.add("java.*");
+    	 list.add("javassist.*");
     	 methodExitExclusions=new ArrayList<String>(list);
     	 methodEntryExclusions=methodExitExclusions;
     	 list.clear();
     	 
-//    	 list.add("");
+//    	 监听的     list.add("");
     	 methodExitFilters=new ArrayList<String>(list);
     	 methodEntryFilters=methodExitFilters;
     	 list.clear();
@@ -156,7 +168,7 @@ public class MethodTrace {
         for(String methodExclude:methodEntryExclusions) {
         	entryReq.addClassExclusionFilter(methodExclude);
         }
-        entryReq.setSuspendPolicy(MethodEntryRequest.SUSPEND_EVENT_THREAD);
+        entryReq.setSuspendPolicy(MethodEntryRequest.SUSPEND_NONE);
         entryReq.enable();
 //		注册方法退出请求
         MethodExitRequest exitReq = eventRequestManager.createMethodExitRequest();
@@ -168,15 +180,15 @@ public class MethodTrace {
         for(String methodExitExclusion:methodExitExclusions) {
         	exitReq.addClassExclusionFilter(methodExitExclusion);
         }
-        exitReq.setSuspendPolicy(MethodExitRequest.SUSPEND_EVENT_THREAD);
+        exitReq.setSuspendPolicy(MethodExitRequest.SUSPEND_NONE);
         exitReq.enable();
 //        注册线程开启请求
         ThreadStartRequest threadStartRequest = eventRequestManager.createThreadStartRequest();
-        threadStartRequest.setSuspendPolicy(ThreadStartRequest.SUSPEND_EVENT_THREAD);
+        threadStartRequest.setSuspendPolicy(ThreadStartRequest.SUSPEND_NONE);
         threadStartRequest.enable();
 //        注册线程死亡请求
         ThreadDeathRequest threadDeathRequest = eventRequestManager.createThreadDeathRequest();
-        threadDeathRequest.setSuspendPolicy(ThreadDeathRequest.SUSPEND_EVENT_THREAD);
+        threadDeathRequest.setSuspendPolicy(ThreadDeathRequest.SUSPEND_NONE);
         threadDeathRequest.enable();
 //        注册类进入请求
         ClassPrepareRequest classPrepareRequest = eventRequestManager.createClassPrepareRequest();
@@ -188,7 +200,7 @@ public class MethodTrace {
         for(String classPrepareExclusion:classPrepareExclusions) {
         	classPrepareRequest.addClassExclusionFilter(classPrepareExclusion);
         }
-        classPrepareRequest.setSuspendPolicy(ClassPrepareRequest.SUSPEND_EVENT_THREAD);
+        classPrepareRequest.setSuspendPolicy(ClassPrepareRequest.SUSPEND_NONE);
         classPrepareRequest.enable();
 //      注册类退出请求
         ClassUnloadRequest classUnloadRequest = eventRequestManager.createClassUnloadRequest();
@@ -200,15 +212,15 @@ public class MethodTrace {
         for(String classUnloadExclusion:classUnloadExclusions) {
         	classUnloadRequest.addClassExclusionFilter(classUnloadExclusion);
         }
-        classUnloadRequest.setSuspendPolicy(ClassUnloadRequest.SUSPEND_EVENT_THREAD);
+        classUnloadRequest.setSuspendPolicy(ClassUnloadRequest.SUSPEND_NONE);
         classUnloadRequest.enable();
 //      监视器连接请求
         MonitorContendedEnterRequest monitorContendedEnterRequest = eventRequestManager.createMonitorContendedEnterRequest();
-        monitorContendedEnterRequest.setSuspendPolicy(MonitorContendedEnterRequest.SUSPEND_EVENT_THREAD);
+        monitorContendedEnterRequest.setSuspendPolicy(MonitorContendedEnterRequest.SUSPEND_NONE);
         monitorContendedEnterRequest.enable();
 //      监视器已连请求
         MonitorContendedEnteredRequest monitorContendedEnteredRequest = eventRequestManager.createMonitorContendedEnteredRequest();
-        monitorContendedEnteredRequest.setSuspendPolicy(MonitorContendedEnteredRequest.SUSPEND_EVENT_THREAD);
+        monitorContendedEnteredRequest.setSuspendPolicy(MonitorContendedEnteredRequest.SUSPEND_NONE);
         monitorContendedEnteredRequest.enable();
         
 //        异常请求
