@@ -13,13 +13,15 @@ import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
 
 public class myUmlFigure extends Panel implements Cloneable{
 	ToolbarLayout layout;
+	Label header;
 	UMLFigureShape fields;
 	UMLFigureShape methods;
-	Label header;
+	UMLFigureShape innerClass;
 	public Label getHeader() {
 		return header;
 	}
@@ -29,10 +31,12 @@ public class myUmlFigure extends Panel implements Cloneable{
 		
 		umlFigure.setClassName(this.header.getText());
 		
+		@SuppressWarnings("unchecked")
 		List<Label> fieldC = fields.getChildren();
 		for(Label f:fieldC) {
 			umlFigure.appendFieldsName(f.getText());
 		}
+		@SuppressWarnings("unchecked")
 		List<Label> mc = methods.getChildren();
 		for(Label m:mc) {
 			umlFigure.appendMethodsName(m.getText());
@@ -45,6 +49,10 @@ public class myUmlFigure extends Panel implements Cloneable{
 
 	public UMLFigureShape getMethods() {
 		return methods;
+	}
+
+	public UMLFigureShape getInnerClass() {
+		return innerClass;
 	}
 
 	Color color = new Color(Display.getCurrent(), 255, 255, 6);
@@ -77,33 +85,39 @@ public class myUmlFigure extends Panel implements Cloneable{
 		this.layout=layout;
 //		新建一个工具栏布局，自定义的分开边框
 		separatorBorder= new SeparatorBorder();
+		Font myFont = getFont();
 //		新建头标签，设置字体和边界
 		header=new Label();
-		header.setFont(getFont());
+		header.setFont(myFont);
 		header.setBorder(new MarginBorder(3, 5, 3, 5));
 		
 //		新建字段组件，和方法组件，设置它们的字体，设置布局和边框
 		fields = new UMLFigureShape();
 		methods = new UMLFigureShape();
-		fields.setFont(getFont());
-		methods.setFont(getFont());
+		innerClass = new UMLFigureShape();
+		fields.setFont(myFont);
+		methods.setFont(myFont);
+		innerClass.setFont(myFont);
 		fields.setBorder(separatorBorder);
 		methods.setBorder(separatorBorder);
+		innerClass.setBorder(separatorBorder);
 		ToolbarLayout layout2 = new ToolbarLayout();
 		ToolbarLayout layout3 = new ToolbarLayout();
+		ToolbarLayout layout4 = new ToolbarLayout();
 		fields.setLayoutManager(layout2);
 		methods.setLayoutManager(layout3);
-		
+		innerClass.setLayoutManager(layout4);
 //		添加标记性标签
 		fields.add(new Label("---fields---"),"---fields---");
 		methods.add(new Label("---methods---"),"---methods---");
+		innerClass.add(new Label("---innerClass---"),"---innerClass---");
 		layout.setStretchMinorAxis(true);
 		
 //		将头，字段，和方法添加到组件中
 		add(header,"head");
 		add(fields,"fields");
 		add(methods,"methods");
-		
+		add(innerClass,"innerClass");
 //		设置本组件的整体布局和边框，添加个组件，设置背景颜色。
 		setBorder(lineBorder);
 		setLayoutManager(layout);
@@ -156,5 +170,9 @@ public class myUmlFigure extends Panel implements Cloneable{
 		label.setFont(getFont());
 		fields.add(label,label.getText());
 	}
-
+	public void appendInnerClass(String string) {
+		Label label = new Label(string);
+		label.setFont(getFont());
+		innerClass.add(label,label.getText());
+	}
 }

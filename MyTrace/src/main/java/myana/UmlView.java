@@ -35,7 +35,7 @@ public class UmlView {
 	private ScalableFreeformLayeredPane root = null;
 	private FreeformLayer primary = null;
 
-	private String path = "C:\\Users\\cobbl\\Desktop\\帮助文件\\书籍\\Eclipse\\draw2d\\org.eclipse.draw2d_3.10.100.201606061308\\org";
+	private String path = "C:\\Users\\cobbl\\git\\MyTrace\\MyTrace\\target\\classes\\com\\simple";
 //	private String path = "D:\\oxygenEclipse\\BTrace\\Genealogy\\bin\\com\\scr";
 
 	public UmlView() {
@@ -102,6 +102,10 @@ public class UmlView {
 					}
 					figure.appendMethodsName(ctMethod.getName());
 				}
+				List<CtClass> innerClass = classDetail.getInnerClass();
+				for (CtClass ctClass : innerClass) {
+					
+				}
 //				图形图层添加图形
 				primary.add(figure, className);
 			}
@@ -118,6 +122,7 @@ public class UmlView {
 //		新建窗体，设置布局和字体
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display);
+		Shell shell2=new Shell(display);
 		FillLayout layout = new FillLayout();
 		shell.setLayout(layout);
 		shell.setFont(new Font(display, new FontData()));
@@ -129,12 +134,12 @@ public class UmlView {
 //		新建图层，图形信息
 		getContents();
 //		新建一个配适器，用于键新的窗体来装载选择的图形和其关联的图形
-		new ConnectionAdapter(context,primary);
+		new ConnectionAdapter(shell2,context,primary);
 //		设置内容，新建菜单栏
 		canvas.setContents(root);
 		createMenuBar(shell);
 		shell.open();
-		while (!shell.isDisposed()) {
+		while (!shell.isDisposed()&&shell2.isDisposed()) {
 			while (!display.readAndDispatch()) {
 				display.sleep();
 			}

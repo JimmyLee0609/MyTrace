@@ -12,18 +12,19 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 
 public class ClassDetail {
-	private  Set<String> attributeDependents=null;
-	private List<CtField> attributes=null;
-	private Set<String> classDependents=null;
-	
-	
 	private String className;
-	private List<CtClass> interfaceNames=null;
-	private  Set<String> methodDependents=null;
-	private List<CtMethod> methods=null;
 	private String packageName;
-	private List<CtClass> innerClass=null;
 	private String superClassName;
+	private List<CtClass> interfaceNames=null;
+
+	private Set<String> classDependents=null;
+	private  Set<String> attributeDependents=null;
+	private  Set<String> methodDependents=null;
+	
+	
+	private List<CtField> attributes=null;
+	private List<CtMethod> methods=null;
+	private List<CtClass> innerClass=null;
 	{	
 		classDependents=new HashSet<>();
 		methodDependents=new HashSet<>();
@@ -49,7 +50,7 @@ public class ClassDetail {
 	public boolean addInnerClass(CtClass innerClass){
 		return this.innerClass.add(innerClass);
 	}
-	public void addInnerClass(CtClass[] innerClasses){
+	public void addInnerClasses(CtClass[] innerClasses){
 		for (CtClass ctClass : innerClasses) {
 			innerClass.add(ctClass);
 		}
@@ -260,6 +261,54 @@ public class ClassDetail {
 	public void setSuperClassName(String superClassName) {
 //		设置超类名
 		this.superClassName = superClassName;
+	}
+
+//=======================用字段来保存数据=================================================
+	public void addField(FieldDetail fieldDetail) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void addInterfaces(ArrayList<String> intfs) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void addInnerClazz(ArrayList<String> inner) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void addMethods(ArrayList<MethodDetail> methods2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void addClassName(String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void setInterfaceFlage(boolean interface1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void setModifier(String modifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void setSignater(String genericSignature) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
