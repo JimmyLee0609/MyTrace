@@ -5,8 +5,12 @@ import java.util.List;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.LayoutManager;
+import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.Panel;
+import org.eclipse.draw2d.UpdateManager;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Rectangle;
 
 public class UMLFigureShape extends Panel {
 
@@ -16,18 +20,9 @@ public class UMLFigureShape extends Panel {
 	}
 
 	@Override
-	public Dimension getPreferredSize(int wHint, int hHint) {
-//		布局管理器 在调用  layout时 调用，本例为隐藏，显示控件用
-		/*if(isVisible()){
-			if (getLayoutManager() != null) {
-				Dimension d = getLayoutManager().getPreferredSize(this, wHint,
-						hHint);
-				if (d != null)
-					return d;
-			}
-		}
-		 return new Dimension(0,0);*/
-		return super.getPreferredSize( wHint,  hHint);
+	public void handleMouseDoubleClicked(MouseEvent event) {
+		System.out.println("double click");
+		super.handleMouseDoubleClicked(event);
 	}
 
 	@Override
@@ -39,29 +34,5 @@ public class UMLFigureShape extends Panel {
 		}
 		super.remove(figure);
 	}
-	@Override
-	public Dimension getMaximumSize() {
-//		布局管理器 在调用  layout时 调用，本例为隐藏，显示控件用
-		if(isVisible())
-			return super.getMaximumSize();
-		return getSize();
-	}
 
-	@Override
-	public Dimension getMinimumSize(int wHint, int hHint) {
-//		布局管理器 在调用  layout时 调用，本例为隐藏，显示控件用
-		if(!isVisible())
-			return getSize();
-		return super.getMinimumSize(wHint, hHint);
-	}
-
-	public void appendMethodsName(Label label) {
-		
-	}
-
-	public void appendFieldsName(Label label) {
-		
-	}
-
-	
 }

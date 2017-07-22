@@ -4,8 +4,6 @@ import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FocusEvent;
 import org.eclipse.draw2d.FocusListener;
-import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.GraphicsSource;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.PolygonDecoration;
@@ -20,20 +18,37 @@ public class myUmlConnection extends PolylineConnection {
 	private ChopboxAnchor sourceaAnchor;
 	private ChopboxAnchor endAnchor;
 	private String relation;
+	public void setRelation(String relation) {
+//		设置两个组件的关系
+		this.relation = relation;
+		setCon(relation);
+	}
+
 	private PolygonDecoration decoration;
 	private boolean flag=false;
 	Color color = new Color(Display.getCurrent(), 255, 255, 6);
 	Color focusC=new Color(Display.getCurrent(),255,0,200);
 	public myUmlConnection() {
 		super();
-		addMouseListener(new MouseListener(){
+		addFocusListener(new FocusListener() {
 
 			@Override
-			public void mouseDoubleClicked(MouseEvent me) {
+			public void focusGained(FocusEvent fe) {
+				myUmlConnection.this.setForegroundColor(ColorConstants.red);
+			}
+			@Override
+			public void focusLost(FocusEvent fe) {
+				myUmlConnection.this.setForegroundColor(ColorConstants.black);
+			}
+		});
+		
+		addMouseListener(new MouseListener() {
+			@Override
+			public void mousePressed(MouseEvent me) {
 			}
 
 			@Override
-			public void mousePressed(MouseEvent me) {
+			public void mouseReleased(MouseEvent me) {
 				if(myUmlConnection.this.flag){
 					myUmlConnection.this.source.setBackgroundColor(color);;
 					myUmlConnection.this.end.setBackgroundColor(focusC);;
@@ -44,22 +59,11 @@ public class myUmlConnection extends PolylineConnection {
 					flag=!flag;
 				}
 			}
+
 			@Override
-			public void mouseReleased(MouseEvent me) {
+			public void mouseDoubleClicked(MouseEvent me) {
 			}
 			
-		});
-		addFocusListener(new FocusListener() {
-			
-			@Override
-			public void focusLost(FocusEvent fe) {
-				myUmlConnection.this.setForegroundColor(ColorConstants.red);
-			}
-			
-			@Override
-			public void focusGained(FocusEvent fe) {
-				myUmlConnection.this.setForegroundColor(ColorConstants.black);
-			}
 		});
 		setLineWidth(2);
 	}
@@ -70,6 +74,7 @@ public class myUmlConnection extends PolylineConnection {
 		this.end = end;
 		this.relation=relation;
 		setCon(relation);
+		new MyMover(this);
 	}
 
 	public myUmlFigure getEndFigure() {

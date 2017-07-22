@@ -105,7 +105,7 @@ public class ClassDetail {
 		return false;
 	}
 	
-	public void getAssiation() throws ClassNotFoundException {
+	public Set<String> getAssiation() throws ClassNotFoundException {
 		for(CtField attribute: attributes) {
 			String name=null;
 			try {
@@ -115,8 +115,9 @@ public class ClassDetail {
 			}
 			attributeDependents.add(name);
 			String signature = attribute.getSignature();
+			
 //			genericSignature 是包含字段类型及泛型类型的全部 如 Ljava/util/List<Ljava/lang/Thread;>
-			if(null!=signature) {
+			if(signature.contains("<")) {
 				String[] split = signature.substring(signature.indexOf("<")+1,signature.indexOf(">")).split(";");
 				for (String string : split) {
 					String replace = string.substring(1,string.length()).replace("/", ".");
@@ -129,6 +130,7 @@ public class ClassDetail {
 				attributeDependents.add(object.getClass().getName());
 			}
 		}
+		return attributeDependents;
 	}
 
 	public List<CtField> getAttributes() {
