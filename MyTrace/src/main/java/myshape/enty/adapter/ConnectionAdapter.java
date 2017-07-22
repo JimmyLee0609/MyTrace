@@ -37,42 +37,12 @@ public class ConnectionAdapter {
 //		保存原来记录图像的图层,和传入的上下文地址
 		ConnectionAdapter.context = context;
 		ConnectionAdapter.primary = primary;
-		
-//		新建窗体设置布局
-		Display display = Display.getDefault();
-		shell2 = new Shell(display);
-		shell2.setLayout(new FillLayout());
-//		新建画布设置字体，布局
-		FigureCanvas figureCanvas = new FigureCanvas(shell2, SWT.DOUBLE_BUFFERED);
-		figureCanvas.setFont(shell2.getFont());
-		figureCanvas.setViewport(new FreeformViewport());
-		
-		root = new ScalableFreeformLayeredPane();
-		root.setFont(figureCanvas.getFont());
-//		新建连接图层,设置线的连接路径
-		conn=new ConnectionLayer();
-		conn.setConnectionRouter( new FanRouter());
-		
-//		新建保存图形的层设置字体，设置布局
-		showPrimary = new FreeformLayer();
-		FlowLayout flowLayout = new FlowLayout();
-		flowLayout.setHorizontal(true);
-		flowLayout.setMajorSpacing(20);
-		flowLayout.setMinorSpacing(20);
-		showPrimary.setLayoutManager(flowLayout);
-		showPrimary.setFont(root.getFont());
-//		目前没起作用
-		new ShortestPathConnectionRouter(showPrimary);
-//		保存两个层		
-		root.add(showPrimary, "Primary");
-		root.add(conn, "conn");
-//		设置显示画布的根
-		figureCanvas.setContents(root);
-		createMenuBar(shell2);
-		createFind(shell2);
+		createShell();
+
 	}
 
-	private void createFind(Shell shell) {
+	private static void createFind(Shell shell) {
+//		新建查找菜单。没实现功能
 		final Menu menuBar = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menuBar);
 		MenuItem findMenuItem = new MenuItem(menuBar, SWT.CASCADE);
@@ -95,6 +65,9 @@ public class ConnectionAdapter {
 	static Shell shell2;
 
 	public static boolean showConnection(Figure figure) {
+		if(shell2.isDisposed()) {
+			createShell();
+		}
 //		将传入的图形进行类型转化，并获取头的文字
 		myUmlFigure temp=(myUmlFigure) figure;
 		String text = temp.getHeader().getText();
@@ -150,6 +123,43 @@ public class ConnectionAdapter {
 		
 		shell2.open();
 		return true;
+		
+	}
+
+	private static void createShell() {
+//		新建窗体设置布局
+		Display display = Display.getDefault();
+		shell2 = new Shell(display);
+		shell2.setLayout(new FillLayout());
+//		新建画布设置字体，布局
+		FigureCanvas figureCanvas = new FigureCanvas(shell2, SWT.DOUBLE_BUFFERED);
+		figureCanvas.setFont(shell2.getFont());
+		figureCanvas.setViewport(new FreeformViewport());
+		
+		root = new ScalableFreeformLayeredPane();
+		root.setFont(figureCanvas.getFont());
+//		新建连接图层,设置线的连接路径
+		conn=new ConnectionLayer();
+		conn.setConnectionRouter( new FanRouter());
+		
+//		新建保存图形的层设置字体，设置布局
+		showPrimary = new FreeformLayer();
+		FlowLayout flowLayout = new FlowLayout();
+		flowLayout.setHorizontal(true);
+		flowLayout.setMajorSpacing(20);
+		flowLayout.setMinorSpacing(20);
+		showPrimary.setLayoutManager(flowLayout);
+		showPrimary.setFont(root.getFont());
+//		目前没起作用
+		new ShortestPathConnectionRouter(showPrimary);
+//		保存两个层		
+		root.add(showPrimary, "Primary");
+		root.add(conn, "conn");
+//		设置显示画布的根
+		figureCanvas.setContents(root);
+		createMenuBar(shell2);
+		createFind(shell2);
+		
 	}
 
 	private static void showConnnect(Figure figure, myUmlFigure clone,String relation) {
@@ -164,7 +174,7 @@ public class ConnectionAdapter {
 		connection.setRelation(relation);
 		conn.add(connection, connection.getBounds());
 	}
-	private void createMenuBar(Shell shell) {
+	private static  void createMenuBar(Shell shell) {
 //		新建菜单栏，并保存到窗体
 		final Menu menuBar = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menuBar);
@@ -182,7 +192,7 @@ public class ConnectionAdapter {
 		createScaleToFitMenuItem(zoomMenu);
 	}
 
-	private void createScaleToFitMenuItem(Menu menu) {
+	private  static void createScaleToFitMenuItem(Menu menu) {
 //		在菜单栏中新建菜单项
 		MenuItem menuItem = new MenuItem(menu, SWT.NULL);
 		menuItem.setText("Scale to fit");
@@ -200,7 +210,7 @@ public class ConnectionAdapter {
 
 	}
 
-	private void scaleToFit() {
+	private static void  scaleToFit() {
 //		效果有问题
 		FreeformViewport viewport = (FreeformViewport) root.getParent();
 		org.eclipse.draw2d.geometry.Rectangle viewArea = viewport.getClientArea();
@@ -213,7 +223,7 @@ public class ConnectionAdapter {
 		root.setScale(newScale);
 	}
 
-	private void createFixedZoomMenuItem(Menu menu, String text, double scale) {
+	private static void createFixedZoomMenuItem(Menu menu, String text, double scale) {
 //		新建菜单栏的菜单项，设置菜单的标题，设置选择监听器
 		MenuItem menuItem = new MenuItem(menu, SWT.NULL);
 		menuItem.setText(text);
