@@ -108,9 +108,9 @@ public class myUmlFigure extends Panel implements Cloneable{
 		methods.setLayoutManager(layout3);
 		innerClass.setLayoutManager(layout4);
 //		添加标记性标签
-		fields.add(new Label("---fields---"),"---fields---");
+		/*fields.add(new Label("---fields---"),"---fields---");
 		methods.add(new Label("---methods---"),"---methods---");
-		innerClass.add(new Label("---innerClass---"),"---innerClass---");
+		innerClass.add(new Label("---innerClass---"),"---innerClass---");*/
 		layout.setStretchMinorAxis(true);
 		
 //		将头，字段，和方法添加到组件中

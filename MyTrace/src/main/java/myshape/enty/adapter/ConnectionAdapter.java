@@ -1,5 +1,6 @@
 package myshape.enty.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -85,22 +86,18 @@ public class ConnectionAdapter {
 		myUmlFigure temp=(myUmlFigure) figure;
 		String text = temp.getHeader().getText();
 //		获取图形相关的类的信息
-		ClassDetail find = null;
-		List<ClassDetail> list = context.getClassDetail();
-		for (ClassDetail detail : list) {
+		ClassDetail_StringMode find = null;
+		List<ClassDetail_StringMode> list = context.getClassDetail();
+		for (ClassDetail_StringMode detail : list) {
 			if (detail.getClassName().equals(text)) {
 				find = detail;
 			}
 		}
 //		获取扎到的类信息的  父类，  接口， 字段信息
 		String superClassName = find.getSuperClassName();
-		List<CtClass> interfaceNames = find.getInterfaceNames();
-		Set<String> assiation = null;
-		try {
-			assiation = find.getAssiation();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		ArrayList<String> interfaces = find.getInterfaces();
+		ArrayList<FieldDetail> fields = find.getFields();
+		
 //		克隆传入的图形并保存新的图形图层中
 		myUmlFigure clone = temp.clone();
 		new MyMover(clone);
@@ -118,18 +115,17 @@ public class ConnectionAdapter {
 			}
 		}
 //		找接口
-		for(CtClass in:interfaceNames) {
-			String c = in.getName();
+		for(String in:interfaces) {
 			for (myUmlFigure f : children) {
-				if (f.getHeader().getText().equals(c)) {
+				if (f.getHeader().getText().equals(in)) {
 					showConnnect(f, clone,"implements");
 				}
 			}
 		}
 //		找字段
-		for (String c : assiation) {
+		for (FieldDetail c : fields) {
 			for (myUmlFigure f : children) {
-				if (f.getHeader().getText().equals(c)) {
+				if (f.getHeader().getText().equals(c.getType())) {
 					showConnnect(f,clone,"have");
 				}
 			}

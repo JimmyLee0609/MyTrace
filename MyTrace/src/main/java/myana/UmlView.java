@@ -1,5 +1,6 @@
 package myana;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.ConnectionLayer;
@@ -20,22 +21,21 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
-import javassist.CtClass;
-import javassist.CtField;
-import javassist.CtMethod;
-import javassist.NotFoundException;
 import myshape.enty.MyMover;
 import myshape.enty.myUmlFigure;
-import myshape.enty.adapter.ClassDetail;
+import myshape.enty.adapter.ClassDetail_StringMode;
 import myshape.enty.adapter.ConnectionAdapter;
+import myshape.enty.adapter.ConstructorDetail;
 import myshape.enty.adapter.Context;
+import myshape.enty.adapter.FieldDetail;
+import myshape.enty.adapter.MethodDetail;
 
 public class UmlView {
 	private static FigureCanvas canvas;
 	private ScalableFreeformLayeredPane root = null;
 	private FreeformLayer primary = null;
 
-	private String path = "C:\\Users\\cobbl\\git\\MyTrace\\MyTrace\\target\\classes\\com\\simple";
+	private String path = "C:\\Users\\cobbl\\git\\MyTrace\\MyTrace\\target";
 //	private String path = "D:\\oxygenEclipse\\BTrace\\Genealogy\\bin\\com\\scr";
 
 	public UmlView() {
@@ -72,8 +72,8 @@ public class UmlView {
 //		解析路径中的文件
 		context.analyse(path);
 //		遍历解析到的文件
-		List<ClassDetail> detail = context.getClassDetail();
-		for (ClassDetail classDetail : detail) {
+		List<ClassDetail_StringMode> detail = context.getClassDetail();
+		for (ClassDetail_StringMode classDetail : detail) {
 //			后去解析到的类名
 			String className = classDetail.getClassName();
 			if (!className.contains("$")) {
@@ -83,28 +83,28 @@ public class UmlView {
 				figure.setFont(primary.getFont());
 				figure.setClassName(className);
 //				将解析到的字段信息添加到图形中
-				List<CtField> attributes = classDetail.getAttributes();
-				for (CtField ctField : attributes) {
-					figure.appendFieldsName(ctField.getName());
+				ArrayList<FieldDetail> fields = classDetail.getFields();
+				figure.appendFieldsName("=======fields======");
+				for (FieldDetail ctField : fields) {
+					figure.appendFieldsName(ctField.getFieldName());
+				}
+//				将解析到的构造器添加到图形中
+				figure.appendMethodsName("=======constructors=======");
+				ArrayList<ConstructorDetail> constructors = classDetail.getConstructors();
+				for (ConstructorDetail constructorDetail : constructors) {
+					figure.appendMethodsName(constructorDetail.toString());
 				}
 //				将解析到的方法信心添加到图形中
-				List<CtMethod> methods = classDetail.getMethods();
-				for (CtMethod ctMethod : methods) {
-					
-					try {
-						System.out.println(ctMethod.getReturnType().getName());
-						CtClass[] parameterTypes = ctMethod.getParameterTypes();
-						for(CtClass c:parameterTypes)
-						System.out.println(c.getName());
-					} catch (NotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					figure.appendMethodsName(ctMethod.getName());
+				figure.appendMethodsName("=======method=======");
+				 ArrayList<MethodDetail> methodDetails = classDetail.getMethodDetails();
+				for (MethodDetail ctMethod : methodDetails) {
+					figure.appendMethodsName(ctMethod.toString());
 				}
-				List<CtClass> innerClass = classDetail.getInnerClass();
-				for (CtClass ctClass : innerClass) {
-					
+//				将内部类保存到图片中
+				figure.appendInnerClass("======innerClass=======");
+				ArrayList<String> innerClazz = classDetail.getInnerClazz();
+				for (String ctClass : innerClazz) {
+					figure.appendInnerClass(ctClass);
 				}
 //				图形图层添加图形
 				primary.add(figure, className);
@@ -139,7 +139,7 @@ public class UmlView {
 		canvas.setContents(root);
 		createMenuBar(shell);
 		shell.open();
-		while (!shell.isDisposed()&&shell2.isDisposed()) {
+		while (!shell.isDisposed()&&!shell2.isDisposed()) {
 			while (!display.readAndDispatch()) {
 				display.sleep();
 			}
