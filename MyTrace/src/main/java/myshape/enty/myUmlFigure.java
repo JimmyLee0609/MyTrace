@@ -6,10 +6,13 @@ import org.eclipse.draw2d.FocusEvent;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.Panel;
 import org.eclipse.draw2d.ToolbarLayout;
+import org.eclipse.draw2d.UpdateManager;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
@@ -107,10 +110,6 @@ public class myUmlFigure extends Panel implements Cloneable{
 		fields.setLayoutManager(layout2);
 		methods.setLayoutManager(layout3);
 		innerClass.setLayoutManager(layout4);
-//		添加标记性标签
-		/*fields.add(new Label("---fields---"),"---fields---");
-		methods.add(new Label("---methods---"),"---methods---");
-		innerClass.add(new Label("---innerClass---"),"---innerClass---");*/
 		layout.setStretchMinorAxis(true);
 		
 //		将头，字段，和方法添加到组件中
@@ -125,6 +124,35 @@ public class myUmlFigure extends Panel implements Cloneable{
 		setRequestFocusEnabled(true);
 	}
 
+	Dimension temp;
+	Rectangle tempbounds;
+	public void close() {
+		temp=getPreferredSize();
+		tempbounds= getBounds();
+		Dimension size = getHeader().getPreferredSize();
+		UpdateManager updateManager = getUpdateManager();
+		LayoutManager manager = getLayoutManager();
+		
+		updateManager.addDirtyRegion(getParent(), tempbounds);
+		tempbounds.getCopy().resize(size);
+		// 为了避免不受欢迎的影响，获取副本
+		manager.setConstraint(this, tempbounds);
+		setPreferredSize(size);
+		updateManager.addDirtyRegion(getParent(), tempbounds);
+	}
+	
+	public void open() {
+		tempbounds=getBounds();
+		LayoutManager manager = getLayoutManager();
+		UpdateManager updateManager = getUpdateManager();
+		
+		updateManager.addDirtyRegion(getParent(), tempbounds);
+		tempbounds.getCopy().resize(temp);
+		// 为了避免不受欢迎的影响，获取副本
+		manager.setConstraint(this, tempbounds);
+		this.setPreferredSize(temp);
+		updateManager.addDirtyRegion(getParent(), tempbounds);
+	}
 	@Override
 	public void remove(IFigure figure) {
 		remove(header);

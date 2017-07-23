@@ -102,9 +102,9 @@ public class MyMover implements MouseListener, MouseMotionListener {
 			if (figure instanceof myUmlFigure) {
 				myUmlFigure myfigure = (myUmlFigure) figure;
 				if (flage) {
-					// ((myUmlFigure) figure).showDetail();
 					flage = false;
-					preferredSize = myfigure.getPreferredSize();
+//					缩小
+					/*preferredSize = myfigure.getPreferredSize();
 					Dimension size = myfigure.getHeader().getPreferredSize();
 					updateManager.addDirtyRegion(figure.getParent(), bounds);
 					bounds.getCopy().resize(size);
@@ -113,18 +113,21 @@ public class MyMover implements MouseListener, MouseMotionListener {
 					figure.setPreferredSize(size);
 					updateManager.addDirtyRegion(figure.getParent(), bounds);
 					// consume可以避免监听器事件穿透。
+					 * 
+*/					myfigure.close();
 					event.consume();
 				} else {
-					// ((myUmlFigure) figure).closeDetal();
 					flage = true;
-					updateManager.addDirtyRegion(figure.getParent(), bounds);
-
+//					放大
+					/*updateManager.addDirtyRegion(figure.getParent(), bounds);
 					bounds.getCopy().resize(preferredSize);
 					// 为了避免不受欢迎的影响，获取副本
 					layoutManager.setConstraint(figure, bounds);
 					figure.setPreferredSize(preferredSize);
 					updateManager.addDirtyRegion(figure.getParent(), bounds);
 					// consume可以避免监听器事件穿透。
+					 
+*/					myfigure.open();
 					event.consume();
 				}
 			}

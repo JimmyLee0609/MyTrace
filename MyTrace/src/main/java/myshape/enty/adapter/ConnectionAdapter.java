@@ -2,7 +2,6 @@ package myshape.enty.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.draw2d.ConnectionLayer;
 import org.eclipse.draw2d.FanRouter;
@@ -10,9 +9,11 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.FlowLayout;
 import org.eclipse.draw2d.FreeformLayer;
+import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.FreeformViewport;
 import org.eclipse.draw2d.ScalableFreeformLayeredPane;
 import org.eclipse.draw2d.ShortestPathConnectionRouter;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -23,7 +24,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-import javassist.CtClass;
 import myshape.enty.MyMover;
 import myshape.enty.myUmlConnection;
 import myshape.enty.myUmlFigure;
@@ -32,6 +32,9 @@ public class ConnectionAdapter {
 	private static ConnectionLayer conn;
 	private static FreeformLayer primary;
 	private static Context context;
+	public static Context getContext() {
+		return context;
+	}
 	private static ScalableFreeformLayeredPane root;
 	private static Figure showPrimary;
 	private static Shell shell;
@@ -74,7 +77,7 @@ public class ConnectionAdapter {
 //		设置显示画布的根
 		figureCanvas.setContents(root);
 		createMenuBar(shell);
-		createFind(shell);
+//		createFind(shell);
 		
 	}
 
@@ -106,7 +109,7 @@ public class ConnectionAdapter {
 //		克隆传入的图形并保存新的图形图层中
 		myUmlFigure clone = temp.clone();
 		new MyMover(clone);
-		showPrimary.add(clone, "origin");
+		showPrimary.add(clone, new Rectangle(clone.getBounds()));
 		
 //		获取原来图层的图形信息，遍历，并如找到的类信息进行比对，符合的就存入新图层中，并将它们的关系新建连接图形保存到连接图层
 		@SuppressWarnings("unchecked")
@@ -145,20 +148,20 @@ public class ConnectionAdapter {
 //		克隆找到的图形，保存到新图形中
 		myUmlFigure copy = ((myUmlFigure) figure).clone();
 		new MyMover(copy);
-		showPrimary.add(copy, copy.getBounds());
+		showPrimary.add(copy, new Rectangle(copy.getBounds()));
 //		新建连接图形，保存到连接图层中
 		myUmlConnection connection = new myUmlConnection();
 		connection.setSourceFigure(clone);
 		connection.setEndFigure(copy);
 		connection.setRelation(relation);
-		conn.add(connection, connection.getBounds());
+		conn.add(connection, new Rectangle(connection.getBounds()));
 	}
 
 
 	
 
 	
-	private static void createFind(Shell shell) {
+	/*private static void createFind(Shell shell) {
 //		新建查找菜单。没实现功能
 		MenuItem findMenuItem = new MenuItem(menuBar, SWT.CASCADE);
 		findMenuItem.setText("查找");
@@ -173,7 +176,7 @@ public class ConnectionAdapter {
 			}
 		});
 	}
-
+*/
 	private static void createFixedZoomMenuItem(Menu menu, String text, double scale) {
 //		新建菜单栏的菜单项，设置菜单的标题，设置选择监听器
 		MenuItem menuItem = new MenuItem(menu, SWT.NULL);
