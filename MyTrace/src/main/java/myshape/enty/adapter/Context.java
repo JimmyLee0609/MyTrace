@@ -177,7 +177,6 @@ public class Context {
 				}
 				i=0;
 			} catch (NotFoundException e2) {
-				e2.printStackTrace();
 			}finally{
 				detail.addConstructor( constructorDetal);
 			}
@@ -214,22 +213,19 @@ public class Context {
 				}
 				i=0;
 			} catch (NotFoundException e2) {
-				e2.printStackTrace();
 			}
 //			保存方法的返回值
 			try {
 				CtClass returnType = method.getReturnType();
 				methodDetail.addReturnType(returnType.getName());
-			} catch (NotFoundException e1) {
-				e1.printStackTrace();
-			}
+			} catch (NotFoundException e1) {}
 //			保存声明的异常
 			try {
 				CtClass[] exceptionTypes = method.getExceptionTypes();
 				for (CtClass ctClass : exceptionTypes) {
 					methodDetail.addException(ctClass.getName());
 				}
-			} catch (NotFoundException e) {e.printStackTrace();}
+			} catch (NotFoundException e) {}
 //			保存方法的注解
 			Object[] availableAnnotations = method.getAvailableAnnotations();
 			for (Object object : availableAnnotations) {

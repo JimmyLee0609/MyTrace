@@ -118,7 +118,7 @@ public class MethodDetail {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(modifier).append(simpleReturnType+" ").append(MethodName+" (");
+		builder.append(modifier).append(simpleReturnType+" --").append(MethodName+" -(");
 		for(String p:param) {
 			int lastIndexOf = p.lastIndexOf(".");
 			if(lastIndexOf>0) {

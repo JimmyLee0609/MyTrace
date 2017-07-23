@@ -17,6 +17,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
@@ -41,7 +42,6 @@ public class ConnectionAdapter {
 		ConnectionAdapter.primary = primary;
 		ConnectionAdapter.shell=shell;
 		createShell();
-
 	}
 
 	private static void createShell() {
@@ -80,6 +80,8 @@ public class ConnectionAdapter {
 
 	public static boolean showConnection(Figure figure) {
 		if(shell.isDisposed()) {
+			Display default1 = Display.getDefault();
+			shell=new Shell(default1);
 			createShell();
 		}
 //		将传入的图形进行类型转化，并获取头的文字
@@ -92,6 +94,9 @@ public class ConnectionAdapter {
 			if (detail.getClassName().equals(text)) {
 				find = detail;
 			}
+		}
+		if(null==find) {
+			return false;
 		}
 //		获取扎到的类信息的  父类，  接口， 字段信息
 		String superClassName = find.getSuperClassName();
@@ -151,22 +156,19 @@ public class ConnectionAdapter {
 
 
 	
+
+	
 	private static void createFind(Shell shell) {
 //		新建查找菜单。没实现功能
-		final Menu menuBar = new Menu(shell, SWT.BAR);
-		shell.setMenuBar(menuBar);
 		MenuItem findMenuItem = new MenuItem(menuBar, SWT.CASCADE);
 		findMenuItem.setText("查找");
 		findMenuItem.addSelectionListener(new SelectionListener() {
-			
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
 			}
-			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
 				new MessageBox(shell,SWT.OK|SWT.ICON_INFORMATION);
 			}
 		});
@@ -181,7 +183,6 @@ public class ConnectionAdapter {
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
 			}
-
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 //				窗体被选择时设置根的Zoom
@@ -189,11 +190,10 @@ public class ConnectionAdapter {
 			}
 		});
 	}
-
-
+	static Menu menuBar ;
 	private static  void createMenuBar(Shell shell) {
+		menuBar= new Menu(shell, SWT.BAR);
 //		新建菜单栏，并保存到窗体
-		final Menu menuBar = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menuBar);
 //		新建菜单项
 		MenuItem zoomMenuItem = new MenuItem(menuBar, SWT.CASCADE);

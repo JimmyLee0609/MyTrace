@@ -13,13 +13,19 @@ import org.eclipse.draw2d.ScalableFreeformLayeredPane;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 import myshape.enty.MyMover;
 import myshape.enty.myUmlFigure;
@@ -34,9 +40,9 @@ public class UmlView {
 	private static FigureCanvas canvas;
 	private ScalableFreeformLayeredPane root = null;
 	private FreeformLayer primary = null;
-
-	private String path = "C:\\Users\\cobbl\\git\\MyTrace\\MyTrace\\target";
-//	private String path = "D:\\oxygenEclipse\\BTrace\\Genealogy\\bin\\com\\scr";
+	public static MessageBox msgb;
+//	private String path = "C:\\Users\\cobbl\\git\\MyTrace\\MyTrace\\target";
+	private String path = "C:\\Users\\cobbl\\Desktop\\帮助文件\\书籍\\Eclipse\\draw2d\\org.eclipse.draw2d_3.10.100.201606061308\\org\\eclipse";
 
 	public UmlView() {
 	}
@@ -86,7 +92,7 @@ public class UmlView {
 				ArrayList<FieldDetail> fields = classDetail.getFields();
 				figure.appendFieldsName("=======fields======");
 				for (FieldDetail ctField : fields) {
-					figure.appendFieldsName(ctField.getFieldName());
+					figure.appendFieldsName(ctField.toString());
 				}
 //				将解析到的构造器添加到图形中
 				figure.appendMethodsName("=======constructors=======");
@@ -123,9 +129,11 @@ public class UmlView {
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display);
 		Shell shell2=new Shell(display);
+		
 		FillLayout layout = new FillLayout();
 		shell.setLayout(layout);
 		shell.setFont(new Font(display, new FontData()));
+		
 //		新建画布，设置字体，可视区
 		canvas = new FigureCanvas(shell, SWT.V_SCROLL | SWT.DOUBLE_BUFFERED);
 		canvas.setFont(shell.getFont());
@@ -139,14 +147,17 @@ public class UmlView {
 		canvas.setContents(root);
 		createMenuBar(shell);
 		shell.open();
-		while (!shell.isDisposed()&&!shell2.isDisposed()) {
+		while (!shell.isDisposed()) {
 			while (!display.readAndDispatch()) {
 				display.sleep();
 			}
 		}
 
 	}
-	private ConnectionLayer connections;
+	
+	 Button button;
+	 Text text;
+	 Shell shell23;
 
 	private void createMenuBar(Shell shell) {
 		final Menu menuBar = new Menu(shell, SWT.BAR);
@@ -159,6 +170,61 @@ public class UmlView {
 		createFixedZoomMenuItem(zoomMenu, "100%", 1);
 		createFixedZoomMenuItem(zoomMenu, "200%", 2);
 		createScaleToFitMenuItem(zoomMenu);
+		MenuItem find = new MenuItem(menuBar, SWT.CASCADE);
+//		创建查找菜单，弹出式的窗口，
+		find.setText("查找");
+		find.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Display default1 = Display.getDefault();
+				shell23= new Shell(default1);
+				createFind(shell23);
+			}
+			
+			private void createFind(Composite shell) {
+//				新建窗体，添加文本输入框，和按钮
+				shell.setLayout(new FillLayout());
+				shell.setSize(300, 70);
+				text= new Text(shell,SWT.SEARCH|SWT.ICON_SEARCH|SWT.ICON_CANCEL);
+				button= new Button(shell,SWT.NATIVE);
+				button.setText("button");
+				button.setVisible(true);
+				text.setVisible(true);
+				text.setSize(100, 100);
+				button.setSize(100, 100);
+//				添加按钮选择事件
+				button.addSelectionListener(new SelectionListener() {
+					@SuppressWarnings("unchecked")
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+//						当按钮选择时，将文本框中的内容读取出来。然后查找出对应的图形
+						String text2 = text.getText();
+						if(text2==null||text2=="") return;
+						List<myUmlFigure> children = primary.getChildren();
+						for (myUmlFigure myUmlFigure : children) {
+							String text3 = myUmlFigure.getHeader().getText();
+							int indexOf = text3.lastIndexOf(".");
+							if(text2.equalsIgnoreCase(text3)) {
+								myUmlFigure.requestFocus();
+							}else if(indexOf>0) {
+								if(text2.equalsIgnoreCase(text3.substring(indexOf+1, text3.length()))) {
+									myUmlFigure.requestFocus();
+								}
+							}
+						}
+					}
+					@Override
+					public void widgetDefaultSelected(SelectionEvent e) {
+						widgetSelected(e);
+					}
+				});
+				shell23.open();
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+		});
 	}
 
 	private void createScaleToFitMenuItem(Menu menu) {

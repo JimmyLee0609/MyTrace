@@ -76,7 +76,12 @@ public class FieldDetail {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(modifier+" ").append(type+" ").append(fieldName);
+		int lastIndexOf  ;
+		if(null!=type&&( lastIndexOf=type.lastIndexOf("."))>0) {
+			String substring = type.substring(lastIndexOf+1, type.length());
+			builder.append(modifier+"-").append(substring+" --").append(fieldName);
+		}
+		else builder.append(modifier+"-").append(type+" --").append(fieldName);
 		return builder.toString();
 	}
 	
